@@ -4,9 +4,8 @@ const fs = require("fs").promises;
 const client = new Client({
   puppeteer: {
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe",
   },
-  
+  authStrategy: new LocalAuth()
 });
 client.on("ready", () => {
   console.log("Client is ready!");
