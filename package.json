@@ -4,6 +4,7 @@
   "description": "bot",
   "main": "main.js",
   "scripts": {
+    "build": "npm install && run-script build",
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
