@@ -4,8 +4,7 @@
   "description": "bot",
   "main": "main.js",
   "scripts": {
-    "build": "install whatsapp-web.js",
-    "start": "node .",
+    "start": "install && install whatsapp-web.js && node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
