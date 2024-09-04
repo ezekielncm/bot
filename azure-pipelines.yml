@@ -21,7 +21,7 @@ steps:
 - task: npm@1
   inputs:
     command: custom
-    customCommand: 'install && run-script build --if-present'
+    customCommand: 'npm run build'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
   displayName: 'Installer les dépendances et exécuter la build'
 
