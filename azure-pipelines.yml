@@ -22,6 +22,7 @@ steps:
   inputs:
     command: custom
     customCommand: 'start'
+    customCommand: 'install & run-script build --if-present'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
   displayName: 'Installer les dépendances et exécuter la build'
 
