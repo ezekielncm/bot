@@ -31,12 +31,7 @@ steps:
     ArtifactName: 'drop'
   displayName: 'Publier les artefacts'
 
-- task: AzureAppServiceDeploy@1
-  inputs:
-    azureSubscription: '$(azureSubscription)'
-    appService: '$(appService)'
-    package: '$(Build.ArtifactStagingDirectory)/$(outputDirectory)'
-  displayName: 'Déployer sur Azure App Service'
+
 
 # Tâches optionnelles :
 - task: CopyFiles@2
