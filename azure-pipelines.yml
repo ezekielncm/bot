@@ -21,7 +21,7 @@ steps:
 - task: npm@1
   inputs:
     command: custom
-    script: npm install whatsapp-web.js
+    command: install whatsapp-web.js
     customCommand: 'start'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
   displayName: 'Installer les dépendances et exécuter la build'
