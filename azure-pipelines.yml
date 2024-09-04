@@ -1,21 +1,54 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
 - main
 
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  # Variables personnalisables
+  buildConfiguration: 'Release'  # Configuration de build (Debug, Release, etc.)
+  projectName: 'MonProjetNode'  # Nom de votre projet
+  outputDirectory: 'dist'  # Répertoire de sortie de la build
+  azureSubscription: 'VotreAbonnementAzure'  # Nom de votre abonnement Azure
+  appService: 'MonAppService'  # Nom de votre App Service
+
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+    versionSpec: '16.x'  # Spécifiez la version Node.js souhaitée
+  displayName: 'Installer Node.js'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+- task: npm@1
+  inputs:
+    command: custom
+    customCommand: 'install && run-script build --if-present'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+  displayName: 'Installer les dépendances et exécuter la build'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(outputDirectory)'
+    ArtifactName: 'drop'
+  displayName: 'Publier les artefacts'
+
+- task: AzureAppServiceDeploy@1
+  inputs:
+    azureSubscription: '$(azureSubscription)'
+    appService: '$(appService)'
+    package: '$(Build.ArtifactStagingDirectory)/$(outputDirectory)'
+  displayName: 'Déployer sur Azure App Service'
+
+# Tâches optionnelles :
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: '**/*.js'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/coverage'
+    Overwrite: true
+  displayName: 'Copier les fichiers de couverture de code'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '$(Build.ArtifactStagingDirectory)/coverage/*.xml'
+    testRunTitle: 'Tests unitaires'
+  displayName: 'Publier les résultats des tests'
