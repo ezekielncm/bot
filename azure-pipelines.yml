@@ -27,7 +27,7 @@ steps:
 - task: npm@1
   inputs:
     command: custom
-    
+    script: cd wwebjs-bot
     customCommand: 'start'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
   displayName: 'Installer les dépendances et exécuter la build'
