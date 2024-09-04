@@ -27,7 +27,7 @@ steps:
     mkdir wwebjs-bot
     cd wwebjs-bot
     npm init -y
-    npm start
+  customcommand: "start"
   displayName: 'Créer un nouveau projet et exécuter le script de démarrage'
 
 - task: PublishBuildArtifacts@1
