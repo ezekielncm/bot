@@ -1,0 +1,19 @@
+version: '3.9'  # version à jour
+
+services:
+  whatsapp-bot:
+    build:
+      context: .
+      target: runtime
+    # Si .env est absent, ignore-le grâce à la syntaxe YAML
+    env_file:
+      - .env
+    volumes:
+      - ./.wwebjs_auth:/app/.wwebjs_auth
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep node || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
