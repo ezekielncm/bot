@@ -4,18 +4,47 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+  - task: UseNode@1
+    inputs:
+      version: '20.x'
 
-- script: |
-    npm install
-    npm start
-  displayName: 'npm install and build'
+  - script: |
+      npm install --package-lock-only
+      npm outdated || true
+    displayName: 'npm outdated'
+
+  - script: |
+      npm update
+    displayName: 'npm update'
+
+  - script: |
+      npm audit --audit-level=high
+    displayName: 'npm audit'
+
+  - script: |
+      npm ci
+      npm test
+    displayName: 'Install & Test'
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'YourServiceConnectionToACR'
+      repository: '$(ACR_NAME).azurecr.io/whatsapp-bot'
+      command: 'buildAndPush'
+      dockerfile: 'Dockerfile'
+      tags: |
+        $(Build.BuildId)
+
+  - task: AzureWebAppContainer@1
+    inputs:
+      azureSubscription: 'YourAzureServiceConnection'
+      appName: 'your-app-service-name'
+      containers: '$(ACR_NAME).azurecr.io/whatsapp-bot:$(Build.BuildId)'
